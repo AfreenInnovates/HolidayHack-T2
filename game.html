@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iron Man Beetle Catcher</title>
+    <link rel="shortcut icon" href="iron_man.png" type="image/x-icon" />
+    <style>
+      body {
+        background-color: #1c1c1c;
+        font-family: "Courier New", Courier, monospace;
+        color: #fff;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(50, 50, 50, 0.2) 50%,
+          rgba(10, 10, 10, 10) 50%
+        );
+        background-size: 100% 8px; /* scanlines */
+
+        animation: backgroundFlicker 2s infinite alternate;
+      }
+      @keyframes backgroundFlicker {
+        0% {
+          background-color: #1a1a1a;
+        }
+        50% {
+          background-color: #2a2a2a;
+        }
+        100% {
+          background-color: #1a1a1a;
+        }
+      }
+      h1 {
+        color: #f1c40f;
+        text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.7);
+        font-size: 3rem;
+        margin-top: 20px;
+      }
+
+      canvas {
+        border: 4px solid #e74c3c;
+        margin-top: 20px;
+        background-color: #222;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+      }
+
+      #startButton {
+        font-size: 1.5rem;
+        padding: 15px 30px;
+        background-color: #e74c3c;
+        border: 2px solid #f1c40f;
+        color: #fff;
+        text-transform: uppercase;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+      }
+
+      #startButton:hover {
+        background-color: #f1c40f;
+        color: #e74c3c;
+        transform: scale(1.1);
+      }
+
+      .game-over {
+        font-size: 2rem;
+        color: #e74c3c;
+        display: none;
+        text-shadow: 2px 2px 10px rgba(255, 0, 0, 0.8);
+      }
+
+      #startButton:active {
+        transform: scale(0.95);
+      }
+
+      @keyframes neonGlow {
+        0% {
+          text-shadow: 0 0 5px #f1c40f, 0 0 10px #f1c40f, 0 0 20px #f1c40f,
+            0 0 30px #f1c40f, 0 0 40px #f1c40f;
+        }
+        50% {
+          text-shadow: 0 0 10px #e74c3c, 0 0 20px #e74c3c, 0 0 30px #e74c3c,
+            0 0 40px #e74c3c, 0 0 50px #e74c3c;
+        }
+        100% {
+          text-shadow: 0 0 5px #f1c40f, 0 0 10px #f1c40f, 0 0 20px #f1c40f,
+            0 0 30px #f1c40f, 0 0 40px #f1c40f;
+        }
+      }
+
+      h1,
+      h3 {
+        animation: neonGlow 1.5s ease-in-out infinite alternate;
+      }
+
+      #startButton {
+        font-family: "Courier New", monospace;
+      }
+
+      #gameOver {
+        font-family: "Courier New", monospace;
+        color: #e74c3c;
+      }
+
+      .back-button {
+        position: absolute;
+        top: 200px;
+        left: 10px;
+        font-size: 24px;
+        color: #ff0000;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        z-index: 999;
+      }
+
+      button {
+        background-color: #ff6600;
+        border: none;
+        padding: 10px 20px;
+        color: white;
+        font-size: 16px;
+        font-family: "Courier New", Courier, monospace;
+        cursor: pointer;
+        border-radius: 4px;
+        display: block;
+        margin: 0 auto;
+        text-shadow: 2px 2px 4px #000;
+        box-shadow: 0 0 10px #ff4500, 0 0 20px #ff4500;
+      }
+
+      button:hover {
+        background-color: #ff0000;
+        color: #ffd700;
+      }
+
+      button:focus {
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <audio id="background-music" autoplay loop style="display: none" muted>
+      <source src="music1.mp3" type="audio/mp3" />
+    </audio>
+    <button class="back-button" onclick="window.location.href='index.html'">
+      ←
+    </button>
+    <h1>Iron Man Beetle Catcher</h1>
+    <h3>Catch 5 Beetles to Win the Game!</h3>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <button id="startButton">Start Game</button>
+    <div id="gameOver" class="game-over">
+      Game Over! You caught all the Beetles!
+    </div>
+
+    <script>
+      const canvas = document.getElementById("gameCanvas");
+      const ctx = canvas.getContext("2d");
+      const startButton = document.getElementById("startButton");
+      const gameOverDiv = document.getElementById("gameOver");
+
+      let ironMan = {
+        x: canvas.width / 2,
+        y: canvas.height - 150,
+        width: 100,
+        height: 100,
+      };
+      let beetles = [];
+      let score = 0;
+      let gameInterval;
+      let beetleInterval;
+      let caughtBeetles = 0;
+
+      const ironManImage = new Image();
+      ironManImage.src = "iron_man.png";
+
+      const beetleImage = new Image();
+      beetleImage.src =
+        "https://vignette1.wikia.nocookie.net/villains/images/9/98/Beetle2.jpg/revision/latest?cb=20120515211751";
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowLeft" && ironMan.x > 0) {
+          ironMan.x -= 20;
+        } else if (
+          event.key === "ArrowRight" &&
+          ironMan.x < canvas.width - ironMan.width
+        ) {
+          ironMan.x += 20;
+        }
+      });
+
+      function startGame() {
+        score = 0;
+        caughtBeetles = 0;
+        ironMan.x = canvas.width / 2;
+        ironMan.y = canvas.height - 150;
+        beetles = [];
+        gameOverDiv.style.display = "none";
+        startButton.style.display = "none";
+
+        gameInterval = setInterval(updateGame, 1000 / 60);
+        beetleInterval = setInterval(spawnBeetle, 1000);
+      }
+
+      function updateGame() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.drawImage(
+          ironManImage,
+          ironMan.x,
+          ironMan.y,
+          ironMan.width,
+          ironMan.height
+        );
+
+        for (let i = 0; i < beetles.length; i++) {
+          beetles[i].y += 2;
+          ctx.drawImage(beetleImage, beetles[i].x, beetles[i].y, 100, 100);
+
+          if (
+            ironMan.x < beetles[i].x + beetles[i].width &&
+            ironMan.x + ironMan.width > beetles[i].x &&
+            ironMan.y < beetles[i].y + beetles[i].height &&
+            ironMan.y + ironMan.height > beetles[i].y
+          ) {
+            beetles.splice(i, 1);
+            caughtBeetles++;
+            score += 10;
+            if (caughtBeetles === 5) {
+              endGame();
+            }
+          }
+        }
+
+        ctx.fillStyle = "white";
+        ctx.font = "24px Arial";
+        ctx.fillText("Score: " + score, 20, 30);
+      }
+
+      function spawnBeetle() {
+        if (caughtBeetles < 5) {
+          const beetle = {
+            x: Math.random() * (canvas.width - 100),
+            y: 0,
+            width: 100,
+            height: 100,
+          };
+          beetles.push(beetle);
+        }
+      }
+
+      function endGame() {
+        clearInterval(gameInterval);
+        clearInterval(beetleInterval);
+        gameOverDiv.style.display = "block";
+      }
+
+      startButton.addEventListener("click", startGame);
+
+      window.addEventListener("load", () => {
+        const audio = document.getElementById("background-music");
+        audio.muted = true;
+        audio.play().catch((error) => {
+          console.error("Audio playback failed:", error);
+        });
+
+        const unmuteButton = document.createElement("button");
+        unmuteButton.innerText = "Click to Play Music";
+        unmuteButton.style.position = "fixed";
+        unmuteButton.style.top = "20px";
+        unmuteButton.style.right = "20px";
+        document.body.appendChild(unmuteButton);
+
+        const stopButton = document.createElement("button");
+        stopButton.innerText = "Stop Music";
+        stopButton.style.position = "fixed";
+        stopButton.style.top = "60px";
+        stopButton.style.right = "20px";
+        stopButton.style.display = "none";
+        document.body.appendChild(stopButton);
+
+        unmuteButton.addEventListener("click", () => {
+          audio.muted = false;
+          audio.play().catch((error) => {
+            console.error("Audio playback failed:", error);
+          });
+          unmuteButton.style.display = "none";
+          stopButton.style.display = "block";
+        });
+
+        stopButton.addEventListener("click", () => {
+          audio.pause();
+          audio.currentTime = 0;
+          stopButton.style.display = "none";
+          unmuteButton.style.display = "block";
+        });
+      });
+    </script>
+
+    <footer
+      style="
+        color: #f4f4f4;
+        padding: 20px;
+        text-align: center;
+        margin-top: 200px;
+      "
+    >
+      <p>&copy; 2024 Iron Man Fan Club. All rights reserved.</p>
+      <p>
+        <a href="#" style="color: #00e5ff; text-decoration: none"
+          >Privacy Policy</a
+        >
+        |
+        <a href="#" style="color: #00e5ff; text-decoration: none"
+          >Terms of Service</a
+        >
+      </p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,505 @@
+body {
+  background-color: #1a1a1a;
+  color: #f4f4f4;
+  font-family: "Courier New", Courier, monospace;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background: linear-gradient(
+    to bottom,
+    rgba(50, 50, 50, 0.2) 50%,
+    rgba(10, 10, 10, 10) 50%
+  );
+  background-size: 100% 8px; /* scanlines */
+
+  animation: backgroundFlicker 2s infinite alternate;
+}
+
+.gif {
+  animation: flipGIF 15s infinite;
+}
+
+@keyframes flipGIF {
+  0% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(-1);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+.section,
+.container,
+.iron-man-universe {
+  height: 80vh;
+  padding: 100px;
+}
+
+h1,
+h2 {
+  color: #ff4500; /* Orange */
+  text-shadow: 0 0 10px #ff4500, 0 0 20px #ff4500, 0 0 30px #ff4500,
+    0 0 40px #ff4500; /* Orange glow */
+  animation: neonGlow 1.5s ease-in-out infinite alternate;
+
+  h1,
+  h2,
+  h3 {
+    font-family: "Press Start 2P", cursive;
+  }
+  p,
+  a,
+  button {
+    font-family: "Roboto", sans-serif;
+  }
+}
+
+/* Blinking Lights Effect */
+.marquee {
+  background-color: #f4c542;
+  color: #000;
+  padding: 10px;
+  font-size: 1.5em;
+  font-family: "Comic Sans MS", cursive;
+  white-space: nowrap;
+  animation: blinkLights 1s infinite alternate;
+}
+
+.marquee span {
+  display: inline-block;
+  animation: scroll 10s linear infinite;
+}
+
+@keyframes blinkLights {
+  0% {
+    background-color: #f4c542;
+    color: #000;
+  }
+  50% {
+    background-color: #ff6347;
+    color: #fff;
+  }
+  100% {
+    background-color: #f4c542;
+    color: #000;
+  }
+}
+
+/* Background Flicker Animation */
+@keyframes backgroundFlicker {
+  0% {
+    background-color: #1a1a1a;
+  }
+  50% {
+    background-color: #2a2a2a;
+  }
+  100% {
+    background-color: #1a1a1a;
+  }
+}
+
+/* Neon Glow Animation */
+@keyframes neonGlow {
+  0% {
+    text-shadow: 0 0 5px #ff4500, 0 0 10px #ff4500, 0 0 15px #ff4500,
+      0 0 20px #ff4500; /* Orange */
+  }
+  50% {
+    text-shadow: 0 0 20px #ff4500, 0 0 30px #ff4500, 0 0 40px #ff4500,
+      0 0 50px #ff4500; /* Orange */
+  }
+  100% {
+    text-shadow: 0 0 5px #ff4500, 0 0 10px #ff4500, 0 0 15px #ff4500,
+      0 0 20px #ff4500; /* Orange */
+  }
+}
+
+/* Pixelated Animation for Links */
+a {
+  color: #00e5ff;
+  text-decoration: none;
+  font-family: "Courier New", Courier, monospace;
+  animation: pixelated 1s steps(5, end) infinite;
+  font-size: 1.5rem;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #ff6347;
+}
+
+@keyframes pixelated {
+  0% {
+    letter-spacing: 1px;
+  }
+  50% {
+    letter-spacing: 3px;
+  }
+  100% {
+    letter-spacing: 1px;
+  }
+}
+/*  Pixelated Glow on Images */
+.gallery img {
+  width: 200px;
+  height: auto;
+  border: 3px solid #ff4500;
+  box-shadow: 5px 5px 0px #f4c542;
+  animation: pixelatedGlow 1s linear infinite alternate;
+}
+
+@keyframes pixelatedGlow {
+  0% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.5);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+/* Fire Effect on Iron Man */
+.flying-ironman {
+  position: absolute;
+  z-index: -5;
+  width: 300px;
+  height: 300px;
+  background: url("iron_man.png") no-repeat center center;
+  background-size: contain;
+  animation: fly 8s linear infinite, pixelatedFly 1s steps(5, end) infinite;
+  opacity: 0.1;
+}
+
+.flying-ironman::after {
+  content: "";
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  width: 60px;
+  height: 30px;
+  background: radial-gradient(circle, #ff4500 0%, transparent 80%);
+  filter: blur(10px);
+  transform: translateX(-50%);
+  animation: fire 1s infinite alternate;
+  opacity: 0.1;
+}
+
+@keyframes fire {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+  100% {
+    opacity: 0.5;
+    transform: translateX(-50%) scale(1.5);
+  }
+}
+
+.flying-ironman {
+  transition: transform 0.3s ease;
+}
+
+@keyframes fly {
+  0% {
+    transform: translate(-50%, -50%) translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translate(80vw, 30vh) rotate(45deg);
+  }
+  50% {
+    transform: translate(40vw, 60vh) rotate(90deg);
+  }
+  75% {
+    transform: translate(10vw, 20vh) rotate(135deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) translateY(0) rotate(360deg);
+  }
+}
+
+@keyframes pixelatedFly {
+  0% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.3);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+/* Glow on Buttons */
+button {
+  background-color: #ff4500;
+  color: white;
+  font-family: "Courier New", Courier, monospace;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0 0 10px #ff4500, 0 0 20px #ff4500;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: #ff6347;
+  box-shadow: 0 0 20px #ff6347, 0 0 40px #ff6347;
+}
+
+.flashcards-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  justify-content: center;
+  padding: 20px;
+  margin-top: 40px;
+  background-color: #1c1c1c;
+  border: 4px solid #a3a3a3;
+  box-shadow: 0 0 15px #ff0000;
+}
+
+.flashcard {
+  width: 90%;
+  aspect-ratio: 4 / 3;
+  position: relative;
+  cursor: pointer;
+  border-radius: 10px;
+  margin: 20px;
+  background-color: #8c0000;
+  border: 3px solid #ffcc00;
+  box-shadow: 0 0 15px #ff4500, 0 0 10px #ffd700 inset;
+  font-family: "Courier New", Courier, monospace;
+  text-align: center;
+  color: #fff;
+  overflow: hidden;
+}
+
+.flashcard .front,
+.flashcard .back {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  border-radius: 10px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 1.1rem;
+  z-index: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.flashcard .front {
+  background: linear-gradient(145deg, #8c0000, #ff4500);
+  color: #ffd700;
+  box-shadow: 0 0 10px #ff6347 inset;
+}
+
+.flashcard .back {
+  background: linear-gradient(145deg, #ffd700, #b8860b);
+  color: #1c1c1c;
+  box-shadow: 0 0 10px #a3a3a3 inset;
+}
+
+.flashcard:hover .front {
+  transform: rotateY(180deg);
+}
+
+.flashcard:hover .back {
+  transform: rotateY(0deg);
+}
+
+.flashcard:hover {
+  box-shadow: 0 0 20px #ff0000, 0 0 20px #ffd700;
+}
+
+.flashcard:active {
+  transform: scale(0.95);
+}
+
+.comics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 0;
+}
+
+.comic {
+  text-align: center;
+  transform: rotate(1deg);
+  transition: transform 0.3s ease;
+}
+
+.comic:hover {
+  transform: rotate(0deg);
+}
+
+.comic img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+  box-shadow: 0 0 15px #ff69b4;
+  border: 3px solid #ff4500;
+  filter: grayscale(100%) contrast(85%) brightness(90%);
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+
+.comic:hover img {
+  filter: grayscale(0%) contrast(100%) brightness(100%);
+  transform: scale(1.02);
+}
+
+.comic h3 {
+  margin-top: 10px;
+  font-size: 1.3rem;
+  color: #ff6347;
+  text-shadow: 0 0 5px #ff6347, 0 0 10px #ff6347;
+}
+
+@media (min-width: 768px) {
+  .comics-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.newspapers-section {
+  padding: 40px 20px;
+  font-family: "Times New Roman", Times, serif;
+  line-height: 1.6;
+}
+
+.newspapers-section h1 {
+  font-family: "Georgia", serif;
+  color: #333;
+  font-size: 2.5rem;
+  text-align: center;
+  text-shadow: 1px 1px 0px #ccc;
+  margin-bottom: 30px;
+  letter-spacing: 2px;
+}
+
+.newspapers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.newspaper {
+  width: 400px;
+  height: 400px;
+  overflow: hidden;
+  position: relative;
+  transform: rotate(-1deg);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin: auto;
+  background: url("retro-paper-texture.jpg") center/cover no-repeat, #f4e3c1;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 0 5px rgba(0, 0, 0, 0.2);
+  clip-path: polygon(
+    5% 0%,
+    95% 0%,
+    100% 10%,
+    95% 90%,
+    85% 100%,
+    15% 100%,
+    5% 90%,
+    0% 10%
+  );
+}
+
+.newspaper:hover {
+  transform: rotate(0deg);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.newspaper h3 {
+  font-size: 1.8rem;
+  font-family: "Times New Roman", serif;
+  color: #111;
+  text-shadow: 1px 1px 0px #999;
+  margin-bottom: 15px;
+}
+
+.newspaper p {
+  font-size: 1.1rem;
+  color: #444;
+  margin: 10px 0;
+}
+
+.newspaper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) contrast(85%) brightness(90%);
+  opacity: 0.95;
+  border-bottom: 3px solid #d2a679;
+  transition: all 0.3s ease;
+}
+
+.newspaper:hover img {
+  filter: sepia(40%) contrast(100%) brightness(80%);
+  transform: scale(1.02);
+}
+
+.newspaper:before {
+  position: absolute;
+  top: -15px;
+  left: 10px;
+  font-family: "Impact", sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  color: #d55;
+  padding: 3px 10px;
+  border: 1px solid #d55;
+  border-radius: 3px;
+}
+
+@media (max-width: 768px) {
+  .newspapers-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .newspapers-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1200px) {
+  .flashcards-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gallery img {
+    width: 150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .section,
+  .container,
+  .iron-man-universe {
+    padding: 50px;
+  }
+
+  h1,
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .flashcards-container {
+    grid-template-columns: 1fr;
+  }
+
+  .newspaper {
+    width: 100%;
+  }
+}

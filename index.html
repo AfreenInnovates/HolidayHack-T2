@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iron Man Fan Club - Retro Edition</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="shortcut icon" href="iron_man.png" type="image/x-icon" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&family=Oswald:wght@200..700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .pt-100 {
+        padding-top: 100px;
+      }
+
+      .fullpage-wrapper {
+        width: 100%;
+        height: 100vh;
+        background: radial-gradient(#353c44, #222931);
+        display: flex;
+        margin: 0px;
+      }
+
+      .reactor-container {
+        width: 250px;
+        height: 250px;
+        position: relative;
+        border-radius: 50%;
+        background-color: #2e3a3f;
+        box-shadow: 0 0 20px 5px rgba(0, 255, 255, 0.8),
+          0 0 40px 10px rgba(0, 255, 255, 0.5) inset;
+        animation: reactor-rotation 5s linear infinite;
+        border: 5px solid #ffcdc9;
+      }
+      .reactor-container-inner {
+        width: 238px;
+        height: 238px;
+        background-color: #222;
+        border-radius: 50%;
+        box-shadow: 0 0 4px 1px #ff2109 inset;
+        background-image: linear-gradient(
+            45deg,
+            rgba(0, 255, 255, 0.3) 25%,
+            transparent 25%
+          ),
+          linear-gradient(-45deg, rgba(0, 255, 255, 0.3) 25%, transparent 25%);
+        background-size: 10px 10px;
+        background-position: 0 0, 5px 5px;
+      }
+      .circle {
+        border-radius: 50%;
+      }
+
+      .abs-center {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        margin: auto;
+      }
+
+      .core-inner {
+        width: 70px;
+        height: 70px;
+        border: 5px solid #1b4e5f;
+        background-color: #fff;
+        box-shadow: 0px 0px 7px 5px #52fefe, 0px 0px 10px 10px #52fefe inset;
+      }
+
+      .core-outer {
+        width: 120px;
+        height: 120px;
+        border: 1px solid #52fefe;
+        background-color: #fff;
+        box-shadow: 0px 0px 2px 1px #52fefe, 0px 0px 10px 5px #52fefe inset;
+      }
+
+      .core-wrapper {
+        width: 180px;
+        height: 180px;
+        background-color: #073c4b;
+        box-shadow: 0px 0px 5px 4px #52fefe, 0px 0px 6px 2px #52fefe inset;
+      }
+
+      .tunnel {
+        width: 220px;
+        height: 220px;
+        background-color: #000;
+        border-radius: 50%;
+        box-shadow: 0 0 5px 1px rgba(0, 255, 255, 0.8),
+          0 0 5px 4px rgba(0, 255, 255, 0.5) inset;
+      }
+
+      .coil-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        animation: 3s infinite linear reactor-anim;
+      }
+
+      .coil {
+        position: absolute;
+        width: 30px;
+        height: 20px;
+        top: calc(50% - 110px);
+        left: calc(50% - 15px);
+        background-color: #1e2e35;
+        border-radius: 50%;
+        transform-origin: 15px 110px;
+        box-shadow: 0 0 5px rgba(255, 183, 1, 0.8) inset;
+      }
+
+      @keyframes reactor-rotation {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+
+      #loading-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: radial-gradient(#353c44, #222931);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 1;
+        transition: opacity 1s ease-in-out;
+      }
+
+      .reactor-container {
+        width: 250px;
+        height: 250px;
+        position: relative;
+        border-radius: 50%;
+        background-color: #384c50;
+        box-shadow: 0 0 32px 8px rgb(18, 20, 20),
+          0 0 4px 1px rgb(18, 20, 20) inset;
+        animation: reactor-rotation 5s linear infinite;
+      }
+
+      .reactor-container-inner {
+        width: 238px;
+        height: 238px;
+        background-color: #222;
+        border-radius: 50%;
+        box-shadow: 0 0 4px 1px #52fefe inset;
+      }
+
+      .tunnel {
+        width: 220px;
+        height: 220px;
+        background-color: #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 5px 1px #52fefe, 0 0 5px 4px #52fefe inset;
+      }
+
+      .coil-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        animation: reactor-rotation 5s linear infinite;
+      }
+
+      .coil {
+        position: absolute;
+        width: 30px;
+        height: 20px;
+        top: calc(50% - 110px);
+        left: calc(50% - 15px);
+        background-color: #073c4b;
+        border-radius: 50%;
+        transform-origin: 15px 110px;
+        box-shadow: 0 0 5px #52fefe inset;
+      }
+
+      .coil-1 {
+        transform: rotate(0deg);
+      }
+      .coil-2 {
+        transform: rotate(45deg);
+      }
+      .coil-3 {
+        transform: rotate(90deg);
+      }
+      .coil-4 {
+        transform: rotate(135deg);
+      }
+      .coil-5 {
+        transform: rotate(180deg);
+      }
+      .coil-6 {
+        transform: rotate(225deg);
+      }
+      .coil-7 {
+        transform: rotate(270deg);
+      }
+      .coil-8 {
+        transform: rotate(315deg);
+      }
+
+      .core-wrapper {
+        width: 180px;
+        height: 180px;
+        background-color: #073c4b;
+        border-radius: 50%;
+        box-shadow: 0 0 5px 4px #52fefe, 0 0 6px 2px #52fefe inset;
+      }
+
+      .core-outer {
+        width: 120px;
+        height: 120px;
+        background-color: #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 2px 1px #52fefe, 0 0 10px 5px #52fefe inset;
+      }
+
+      .core-inner {
+        width: 70px;
+        height: 70px;
+        background-color: #1b4e5f;
+        border-radius: 50%;
+        border: 5px solid #1b4e5f;
+        box-shadow: 0 0 7px 5px #52fefe, 0 0 10px 10px #52fefe inset;
+      }
+
+      @keyframes reactor-rotation {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      h1 {
+        font-size: 2.5rem;
+      }
+
+      .unique-text {
+        font-size: 1.5rem;
+        color: #ffcc00;
+        text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5),
+          3px 3px 0 rgba(255, 0, 0, 0.5);
+        font-family: "Oswald", sans-serif;
+        letter-spacing: 1px;
+        background: linear-gradient(45deg, #ffd4ff, #e4ffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <audio id="background-music" autoplay loop style="display: none" muted>
+      <source src="music1.mp3" type="audio/mp3" />
+    </audio>
+    <div id="loading-screen">
+      <div class="reactor-container">
+        <div class="reactor-container-inner abs-center">
+          <div class="tunnel abs-center"></div>
+          <div class="coil-container abs-center">
+            <div class="coil coil-1 circle"></div>
+            <div class="coil coil-2 circle"></div>
+            <div class="coil coil-3 circle"></div>
+            <div class="coil coil-4 circle"></div>
+            <div class="coil coil-5 circle"></div>
+            <div class="coil coil-6 circle"></div>
+            <div class="coil coil-7 circle"></div>
+            <div class="coil coil-8 circle"></div>
+          </div>
+          <div class="core-wrapper abs-center">
+            <div class="core-outer abs-center"></div>
+            <div class="core-inner abs-center"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="main-content">
+      <div class="marquee">
+        <span
+          >🌟 Welcome to the Iron Man Fan Club! 🌟 Suit up and explore Tony
+          Stark's world! 🌟</span
+        >
+      </div>
+
+      <!-- Flying Iron Man -->
+      <div class="flying-ironman"></div>
+
+      <!-- Landing Page Section -->
+      <div class="container">
+        <h1>Welcome to the Iron Man Universe!</h1>
+        <p class="unique-text">
+          Hello, world! I’m Afreen, and this is my tribute to Tony Stark, the
+          genius inventor and superhero who redefined the Marvel Universe.
+          Explore, discover, and immerse yourself in the world of Iron Man —
+          from the suits to the battles, it's all here!
+        </p>
+
+        <img
+          src="https://media.tenor.com/UiLQ_TyR6MMAAAAi/iron-man.gif"
+          alt="Iron Man Flying GIF"
+          class="gif"
+        />
+
+        <h2>Did You Know?</h2>
+        <p class="unique-text" id="fact">
+          Click the button to learn something new about Iron Man!
+        </p>
+        <button onclick="generateFact()">Get Iron Man Fun Fact</button>
+
+        <h2>
+          <a
+            href="terminal.html"
+            id="secretLink"
+            style="color: #ffd700; text-decoration: none"
+          >
+            Click Here to Find the Infinity Stones!
+          </a>
+        </h2>
+      </div>
+
+      <!-- About Iron Man Section -->
+      <div class="container">
+        <h1>About Iron Man</h1>
+        <div class="flashcards-container">
+          <!-- Origin: The Beginning -->
+          <div class="flashcard">
+            <div class="front">
+              <p>Iron Man's Origins</p>
+            </div>
+            <div class="back">
+              <p>
+                Tony Stark, once a carefree genius billionaire, was captured and
+                forced to build a weapon. Instead, he built the first Iron Man
+                suit to escape. A man born again, in iron.
+              </p>
+            </div>
+          </div>
+
+          <!-- The Arc Reactor: A Second Chance -->
+          <div class="flashcard">
+            <div class="front">
+              <p>The Arc Reactor</p>
+            </div>
+            <div class="back">
+              <p>
+                Struggling to survive after his escape, Tony created the arc
+                reactor, a device that saved his life and powered his new
+                identity as Iron Man. A man with a new heart.
+              </p>
+            </div>
+          </div>
+
+          <!-- Evolution of the Suit: The Hero is Born -->
+          <div class="flashcard">
+            <div class="front">
+              <p>The Evolution of Iron Man</p>
+            </div>
+            <div class="back">
+              <p>
+                Over the years, Tony transformed himself and the world. The Iron
+                Man suit became a symbol of hope, courage, and sacrifice. His
+                battle wasn’t just with villains, but with himself.
+              </p>
+            </div>
+          </div>
+
+          <!-- The First Battle: Proving Himself -->
+          <div class="flashcard">
+            <div class="front">
+              <p>The First Battle</p>
+            </div>
+            <div class="back">
+              <p>
+                He faced Obadiah Stane and his own creation. That day, Tony
+                realized that being a hero meant more than just having the power
+                to save the world—it meant being ready to lose everything.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flashcards-container">
+          <!-- The Avengers: A Family Assembles -->
+          <div class="flashcard">
+            <div class="front">
+              <p>The Avengers Assemble</p>
+            </div>
+            <div class="back">
+              <p>
+                He became the cornerstone of the Avengers, a group of heroes
+                forged by his leadership. Through pain, losses, and endless
+                challenges, Tony found his true family.
+              </p>
+            </div>
+          </div>
+
+          <!-- The Battle with Thanos: A War for the World -->
+          <div class="flashcard">
+            <div class="front">
+              <p>The Battle Against Thanos</p>
+            </div>
+            <div class="back">
+              <p>
+                The universe trembled in the face of Thanos. Tony faced
+                impossible odds, but he never wavered. His greatest battle was
+                not against the Mad Titan, but against the fear of losing
+                everyone he loved.
+              </p>
+            </div>
+          </div>
+
+          <!-- The Sacrifice: The Ultimate Price -->
+          <div class="flashcard">
+            <div class="front">
+              <p>The Ultimate Sacrifice</p>
+            </div>
+            <div class="back">
+              <p>
+                In the end, Tony Stark made the ultimate sacrifice. With a final
+                act of selflessness, he saved the universe, knowing he would
+                never see his loved ones again. His heart, once saved by the arc
+                reactor, would stop forever.
+              </p>
+            </div>
+          </div>
+
+          <!-- Legacy: A Hero Never Dies -->
+          <div class="flashcard">
+            <div class="front">
+              <p>His Legacy</p>
+            </div>
+            <div class="back">
+              <p>
+                Tony Stark may have died, but the world will always remember the
+                man who gave everything for them. His legacy lives on, not in
+                the suit, but in the heart of every hero he inspired.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Iron Man Trivia Link -->
+      <h2>
+        <a
+          href="trivia.html"
+          id="triviaLink"
+          style="color: #ffd700; text-decoration: none"
+        >
+          Iron Man Trivia: Test Your Knowledge of the Stark Legacy!
+        </a>
+      </h2>
+      <br /><br /><br />
+      <!-- Iron Man Flight Challenge Link -->
+      <h2>
+        <a
+          href="game.html"
+          id="gameLink"
+          style="color: #ffd700; text-decoration: none"
+        >
+          Iron Man's Flight Challenge
+        </a>
+      </h2>
+
+      <section class="container iron-man-universe">
+        <h1>Iron Man Universe</h1>
+
+        <!-- Comics Section -->
+        <div class="comics-section">
+          <div class="comics-grid">
+            <div class="comic">
+              <img
+                src="https://cdn.marvel.com/u/prod/marvel/i/mg/6/80/671934bd51f5b/portrait_uncanny.jpg"
+                alt="Iron Man Comic 1"
+              />
+              <h3>Iron Man Comic 1</h3>
+            </div>
+            <div class="comic">
+              <img
+                src="https://cdn.marvel.com/u/prod/marvel/i/mg/4/00/65f0747aa8666/portrait_uncanny.jpg"
+                alt="Iron Man Comic 2"
+              />
+              <h3>Iron Man Comic 2</h3>
+            </div>
+            <div class="comic">
+              <img
+                src="https://cdn.marvel.com/u/prod/marvel/i/mg/b/03/66634de912039/portrait_uncanny.jpg"
+                alt="Iron Man Comic 3"
+              />
+              <h3>Iron Man Comic 3</h3>
+            </div>
+            <div class="comic">
+              <img
+                src="https://cdn.marvel.com/u/prod/marvel/i/mg/c/30/66e1ce0527dae/portrait_uncanny.jpg"
+                alt="Iron Man Comic 4"
+              />
+              <h3>Iron Man Comic 4</h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Iron Man Newspapers Section -->
+        <div class="newspapers-section">
+          <div class="newspapers-grid">
+            <!-- Newspaper 1 -->
+            <div class="newspaper">
+              <img
+                src="https://vignette.wikia.nocookie.net/marvelcinematicuniverse/images/9/92/Who-Is-The-Iron-Man-Newspaper-2.jpg/revision/latest?cb=20160313055954"
+                alt="Iron Man Newspaper 1"
+              />
+            </div>
+
+            <!-- Newspaper 2 -->
+            <div class="newspaper">
+              <img
+                src="https://amaproductioncompany.files.wordpress.com/2015/09/iron-man-3.jpg"
+                alt="Iron Man Newspaper 2"
+              />
+            </div>
+
+            <!-- Newspaper 3 -->
+            <div class="newspaper">
+              <img
+                src="https://i.pinimg.com/originals/a2/f1/76/a2f17637aa6f7eb1c198d90ccd30e251.jpg"
+                alt="Iron Man Newspaper 3"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <script src="script.js"></script>
+
+      <!-- Footer Section -->
+      <footer
+        style="
+          color: #f4f4f4;
+          padding: 20px;
+          text-align: center;
+          margin-top: 200px;
+        "
+      >
+        <p>&copy; 2024 Iron Man Fan Club. All rights reserved.</p>
+        <p>
+          <a href="#" style="color: #00e5ff; text-decoration: none"
+            >Privacy Policy</a
+          >
+          |
+          <a href="#" style="color: #00e5ff; text-decoration: none"
+            >Terms of Service</a
+          >
+        </p>
+      </footer>
+    </div>
+    <script>
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          document.getElementById("loading-screen").style.display = "none";
+          document.getElementById("main-content").style.display = "block";
+          document.body.style.overflow = "auto";
+        }, 2000);
+      });
+
+      window.addEventListener("load", () => {
+        const audio = document.getElementById("background-music");
+        audio.muted = true;
+        audio.play().catch((error) => {
+          console.error("Audio playback failed:", error);
+        });
+
+        const unmuteButton = document.createElement("button");
+        unmuteButton.innerText = "Click to Play Music";
+        unmuteButton.style.position = "fixed";
+        unmuteButton.style.top = "20px";
+        unmuteButton.style.right = "20px";
+        document.body.appendChild(unmuteButton);
+
+        const stopButton = document.createElement("button");
+        stopButton.innerText = "Stop Music";
+        stopButton.style.position = "fixed";
+        stopButton.style.top = "60px";
+        stopButton.style.right = "20px";
+        stopButton.style.display = "none";
+        document.body.appendChild(stopButton);
+
+        unmuteButton.addEventListener("click", () => {
+          audio.muted = false;
+          audio.play().catch((error) => {
+            console.error("Audio playback failed:", error);
+          });
+          unmuteButton.style.display = "none";
+          stopButton.style.display = "block";
+        });
+
+        stopButton.addEventListener("click", () => {
+          audio.pause();
+          audio.currentTime = 0;
+          stopButton.style.display = "none";
+          unmuteButton.style.display = "block";
+        });
+      });
+    </script>
+  </body>
+</html>

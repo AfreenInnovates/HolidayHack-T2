@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iron Man Trivia Game</title>
+    <link rel="shortcut icon" href="iron_man.png" type="image/x-icon" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #000;
+        color: #fff;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(
+          to bottom,
+          rgba(50, 50, 50, 0.2) 50%,
+          rgba(10, 10, 10, 10) 50%
+        );
+        background-size: 100% 8px; /* scanlines */
+
+        animation: backgroundFlicker 2s infinite alternate;
+      }
+      @keyframes backgroundFlicker {
+        0% {
+          background-color: #1a1a1a;
+        }
+        50% {
+          background-color: #2a2a2a;
+        }
+        100% {
+          background-color: #1a1a1a;
+        }
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: #222;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+        border: 2px solid #ffdf00;
+      }
+
+      h1 {
+        color: #ff0000;
+        text-align: center;
+        font-size: 32px;
+        text-shadow: 2px 2px 5px #fff, 0 0 25px #ff0000, 0 0 5px #ff0000;
+        font-family: "Press Start 2P", cursive, sans-serif;
+      }
+
+      .intro-text {
+        text-align: center;
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: #f0f0f0;
+      }
+
+      .back-button {
+        position: absolute;
+        top: 200px;
+        left: 10px;
+        font-size: 24px;
+        color: #ff0000;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        z-index: 999;
+      }
+
+      button {
+        background-color: #ff6600;
+        border: none;
+        padding: 10px 20px;
+        color: white;
+        font-size: 16px;
+        font-family: "Courier New", Courier, monospace;
+        cursor: pointer;
+        border-radius: 4px;
+        display: block;
+        margin: 0 auto;
+        text-shadow: 2px 2px 4px #000;
+        box-shadow: 0 0 10px #ff4500, 0 0 20px #ff4500;
+      }
+
+      button:hover {
+        background-color: #ff0000;
+        color: #ffd700;
+      }
+
+      button:focus {
+        outline: none;
+      }
+
+      .question {
+        margin-bottom: 30px;
+      }
+
+      .question p {
+        font-size: 23px;
+        font-family: "Press Start 2P", cursive, sans-serif;
+        color: #ff4500;
+        text-shadow: 2px 2px 4px #000;
+      }
+
+      .answers label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 16px;
+        color: #f4f4f4;
+        font-family: "Press Start 2P", cursive, sans-serif;
+      }
+
+      .answers input {
+        margin-right: 10px;
+        transform: scale(1.2);
+      }
+
+      #results {
+        text-align: center;
+        font-family: "Press Start 2P", cursive, sans-serif;
+        background-color: #333;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+      }
+
+      #results h2 {
+        font-size: 32px;
+        color: #ff0000;
+        text-shadow: 2px 2px 5px #fff, 0 0 25px #ff0000, 0 0 5px #ff0000;
+      }
+
+      #quiz {
+        background-color: #333;
+        padding: 20px;
+        border-radius: 8px;
+        border: 2px solid #ffdf00;
+      }
+
+      #quiz.hidden,
+      .intro-text.hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <audio id="background-music" autoplay loop style="display: none">
+      <source src="music1.mp3" type="audio/mp3" />
+    </audio>
+    <button class="back-button" onclick="window.location.href='index.html'">
+      ←
+    </button>
+
+    <div class="container">
+      <h1>Iron Man Trivia: Test Your Knowledge of the Stark Legacy!</h1>
+      <p class="intro-text">
+        Are you ready for a challenge? Test your Iron Man knowledge!
+      </p>
+
+      <!-- Trivia Questions -->
+      <div id="quiz">
+        <div class="question" id="q1">
+          <p>1. Who is Tony Stark's alter ego?</p>
+          <div class="answers">
+            <label>
+              <input type="radio" name="q1" value="Iron Man" /> Iron Man
+            </label>
+            <label>
+              <input type="radio" name="q1" value="Captain America" /> Captain
+              America
+            </label>
+            <label> <input type="radio" name="q1" value="Thor" /> Thor </label>
+            <label>
+              <input type="radio" name="q1" value="Black Widow" /> Black Widow
+            </label>
+          </div>
+        </div>
+
+        <div class="question" id="q2">
+          <p>2. What is the name of Tony Stark's company?</p>
+          <div class="answers">
+            <label>
+              <input type="radio" name="q2" value="Stark Industries" /> Stark
+              Industries
+            </label>
+            <label>
+              <input type="radio" name="q2" value="Wayne Enterprises" /> Wayne
+              Enterprises
+            </label>
+            <label>
+              <input type="radio" name="q2" value="Oscorp" /> Oscorp
+            </label>
+            <label>
+              <input type="radio" name="q2" value="Pym Technologies" /> Pym
+              Technologies
+            </label>
+          </div>
+        </div>
+
+        <div class="question" id="q3">
+          <p>3. What is the power source that keeps Tony Stark alive?</p>
+          <div class="answers">
+            <label>
+              <input type="radio" name="q3" value="Arc Reactor" /> Arc Reactor
+            </label>
+            <label>
+              <input type="radio" name="q3" value="Infinity Stone" /> Infinity
+              Stone
+            </label>
+            <label>
+              <input type="radio" name="q3" value="Tesseract" /> Tesseract
+            </label>
+            <label>
+              <input type="radio" name="q3" value="Dark Energy" /> Dark Energy
+            </label>
+          </div>
+        </div>
+
+        <div class="question" id="q4">
+          <p>4. Who is the main antagonist in "Iron Man 1"?</p>
+          <div class="answers">
+            <label>
+              <input type="radio" name="q4" value="Obadiah Stane" /> Obadiah
+              Stane
+            </label>
+            <label> <input type="radio" name="q4" value="Loki" /> Loki </label>
+            <label>
+              <input type="radio" name="q4" value="Ultron" /> Ultron
+            </label>
+            <label>
+              <input type="radio" name="q4" value="Red Skull" /> Red Skull
+            </label>
+          </div>
+        </div>
+
+        <div class="question" id="q5">
+          <p>5. What is the name of Iron Man's AI assistant?</p>
+          <div class="answers">
+            <label>
+              <input type="radio" name="q5" value="J.A.R.V.I.S." /> J.A.R.V.I.S.
+            </label>
+            <label>
+              <input type="radio" name="q5" value="Friday" /> Friday
+            </label>
+            <label>
+              <input type="radio" name="q5" value="Cortana" /> Cortana
+            </label>
+            <label>
+              <input type="radio" name="q5" value="Alexa" /> Alexa
+            </label>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button onclick="checkAnswers()">Submit Answers</button>
+      </div>
+
+      <!-- Results Section -->
+      <div id="results" style="display: none">
+        <h2>Your Score: <span id="score"></span>/5</h2>
+        <button onclick="location.reload()">Play Again</button>
+      </div>
+    </div>
+    <footer
+      style="
+        color: #f4f4f4;
+        padding: 20px;
+        text-align: center;
+        margin-top: 200px;
+      "
+    >
+      <p>&copy; 2024 Iron Man Fan Club. All rights reserved.</p>
+      <p>
+        <a href="#" style="color: #00e5ff; text-decoration: none"
+          >Privacy Policy</a
+        >
+        |
+        <a href="#" style="color: #00e5ff; text-decoration: none"
+          >Terms of Service</a
+        >
+      </p>
+    </footer>
+
+    <script>
+      // Correct answers for the questions
+      const correctAnswers = {
+        q1: "Iron Man",
+        q2: "Stark Industries",
+        q3: "Arc Reactor",
+        q4: "Obadiah Stane",
+        q5: "J.A.R.V.I.S.",
+      };
+
+      // Function to shuffle the answers in random order
+      function shuffleAnswers(questionId) {
+        const answers = document.querySelectorAll(
+          `#${questionId} .answers label`
+        );
+        const shuffledAnswers = Array.from(answers).sort(
+          () => Math.random() - 0.5
+        );
+        const answersContainer = document.querySelector(
+          `#${questionId} .answers`
+        );
+
+        answersContainer.innerHTML = "";
+
+        shuffledAnswers.forEach((answer) =>
+          answersContainer.appendChild(answer)
+        );
+      }
+
+      function shuffleAllAnswers() {
+        shuffleAnswers("q1");
+        shuffleAnswers("q2");
+        shuffleAnswers("q3");
+        shuffleAnswers("q4");
+        shuffleAnswers("q5");
+      }
+
+      function checkAnswers() {
+        let score = 0;
+        const totalQuestions = 5;
+
+        for (let i = 1; i <= totalQuestions; i++) {
+          const userAnswer = document.querySelector(
+            `input[name="q${i}"]:checked`
+          );
+          if (userAnswer && userAnswer.value === correctAnswers[`q${i}`]) {
+            score++;
+          }
+        }
+
+        document.getElementById("quiz").classList.add("hidden");
+        document.querySelector(".intro-text").classList.add("hidden");
+        const results = document.getElementById("results");
+        results.style.display = "block";
+        document.getElementById("score").textContent = score;
+      }
+
+      // Shuffle answers when the page loads
+      window.onload = shuffleAllAnswers;
+
+      window.addEventListener("load", () => {
+        const audio = document.getElementById("background-music");
+        audio.muted = true;
+        audio.play().catch((error) => {
+          console.error("Audio playback failed:", error);
+        });
+
+        const unmuteButton = document.createElement("button");
+        unmuteButton.innerText = "Click to Play Music";
+        unmuteButton.style.position = "fixed";
+        unmuteButton.style.top = "20px";
+        unmuteButton.style.right = "20px";
+        document.body.appendChild(unmuteButton);
+
+        const stopButton = document.createElement("button");
+        stopButton.innerText = "Stop Music";
+        stopButton.style.position = "fixed";
+        stopButton.style.top = "60px";
+        stopButton.style.right = "20px";
+        stopButton.style.display = "none";
+        document.body.appendChild(stopButton);
+
+        unmuteButton.addEventListener("click", () => {
+          audio.muted = false;
+          audio.play().catch((error) => {
+            console.error("Audio playback failed:", error);
+          });
+          unmuteButton.style.display = "none";
+          stopButton.style.display = "block";
+        });
+
+        stopButton.addEventListener("click", () => {
+          audio.pause();
+          audio.currentTime = 0;
+          stopButton.style.display = "none";
+          unmuteButton.style.display = "block";
+        });
+      });
+    </script>
+  </body>
+</html>

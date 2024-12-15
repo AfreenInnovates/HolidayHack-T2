@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iron Man Terminal</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="shortcut icon" href="iron_man.png" type="image/x-icon" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Courier New", Courier, monospace;
+        background-color: #1a1a1a;
+        color: #ffd700;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+        background: linear-gradient(
+          to bottom,
+          rgba(50, 50, 50, 0.2) 50%,
+          rgba(10, 10, 10, 10) 50%
+        );
+        background-size: 100% 8px; /* scanlines */
+
+        animation: backgroundFlicker 2s infinite alternate;
+      }
+      @keyframes backgroundFlicker {
+        0% {
+          background-color: #1a1a1a;
+        }
+        50% {
+          background-color: #2a2a2a;
+        }
+        100% {
+          background-color: #1a1a1a;
+        }
+      }
+      /* Terminal container styling */
+      .terminal {
+        width: 80%;
+        max-width: 800px;
+        height: 70%;
+        background-color: #800000;
+        border: 2px solid #ffd700;
+        border-radius: 10px;
+        padding: 20px;
+        font-size: 18px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        box-shadow: 0px 0px 10px rgba(255, 215, 0, 0.5);
+      }
+
+      /* Output section styling */
+      .output {
+        overflow-y: auto;
+        flex-grow: 1;
+        padding-bottom: 10px;
+        width: 100%;
+        text-align: left;
+      }
+
+      /* Styling for input line (command input) */
+      .input-line {
+        display: flex;
+        align-items: center;
+        width: 100%;
+      }
+
+      .prompt {
+        color: #ff4500;
+        margin-right: 5px;
+      }
+
+      input {
+        background-color: transparent;
+        border: none;
+        color: #ffd700;
+        font-size: 18px;
+        font-family: "Courier New", Courier, monospace;
+        flex-grow: 1;
+        outline: none;
+        caret-color: #ff4500;
+      }
+
+      input:focus {
+        outline: none;
+      }
+
+      /* Design section and timeline styling */
+      .design-section {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 50px;
+      }
+
+      .timeline-container {
+        position: relative;
+        width: 100%;
+        max-width: 1000px;
+        height: 100px;
+      }
+
+      .timeline {
+        position: absolute;
+        display: flex;
+        width: 100%;
+        height: 100px;
+        justify-content: flex-start;
+        align-items: center;
+        transition: transform 3s ease-in-out;
+      }
+
+      .timeline-content {
+        margin: 0 20px;
+        background-color: #800000;
+        color: #ffd700;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(255, 215, 0, 0.5);
+        font-family: "Courier New", monospace;
+      }
+
+      .timeline-circle {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #ffd700;
+        margin-left: 10px;
+      }
+
+      .timeline-line {
+        width: 100%;
+        height: 2px;
+        background-color: #ff4500;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      /* Year labels styling */
+      .year-label {
+        position: absolute;
+        top: -30px;
+        color: #ffd700;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        width: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 1;
+        transition: opacity 1s ease-out;
+        font-family: "Courier New", monospace;
+      }
+
+      .fade-out {
+        opacity: 0;
+      }
+
+      /* Footer and back button styling */
+      footer {
+        width: 100%;
+        text-align: center;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        color: #ffd700;
+        padding: 10px 0;
+      }
+
+      .back-button {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background-color: transparent;
+        border: none;
+        color: #ffd700;
+        font-size: 24px;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+
+      .back-button:hover {
+        transform: scale(1.1);
+      }
+    </style>
+  </head>
+  <body>
+    <audio id="background-music" autoplay loop style="display: none">
+      <source src="music1.mp3" type="audio/mp3" />
+    </audio>
+    <!-- Back button to go back to index page -->
+    <button class="back-button" onclick="redirectToIndex()">←</button>
+    <div class="terminal">
+      <div class="output" id="output"></div>
+      <div class="input-line">
+        <span class="prompt">Tony Stark></span>
+        <input type="text" id="input" autofocus />
+      </div>
+    </div>
+
+    <!-- Timeline section where the time travel is visualized -->
+    <section class="design-section">
+      <div class="timeline-container">
+        <div class="timeline" id="timeline"></div>
+      </div>
+    </section>
+
+    <script>
+      const inputField = document.getElementById("input");
+      const output = document.getElementById("output");
+      const timeline = document.getElementById("timeline");
+
+      let commandHistory = [];
+      let commandIndex = -1;
+
+      const infinityStones = {
+        2012: "Tesseract (Space Stone)",
+        2013: "Aether (Reality Stone)",
+        2014: "Power Stone",
+        2015: "Orb (Power Stone)",
+        2016: "Mind Stone",
+        2018: "Mind Stone (Vision's Stone)",
+        2023: "Time Stone",
+      };
+
+      // Function to display output in terminal
+      function displayOutput(message) {
+        const messageElement = document.createElement("div");
+        messageElement.textContent = message;
+        output.appendChild(messageElement);
+      }
+
+      displayOutput(
+        "Tony Stark> type 'Tony's invention' (currently works only when you type for the first time.)"
+      );
+
+      inputField.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          const userInput = inputField.value.trim();
+
+          if (userInput === "Tony's invention") {
+            displayOutput("Tony Stark> Enter the year you want to travel to:");
+            inputField.value = "";
+
+            inputField.addEventListener("keydown", (event) => {
+              if (event.key === "Enter") {
+                const yearInput = inputField.value.trim();
+                const year = parseInt(yearInput);
+
+                if (isNaN(year)) {
+                  displayOutput(
+                    "Tony Stark> Invalid year! Please enter a valid year."
+                  );
+                } else {
+                  animateTimeline(year);
+                }
+                inputField.value = "";
+              }
+            });
+          } else {
+            displayOutput(`Tony Stark> Unknown command: ${userInput}`);
+          }
+
+          commandHistory.push(userInput);
+          commandIndex = commandHistory.length;
+        }
+      });
+
+      inputField.addEventListener("keydown", (event) => {
+        if (event.key === "ArrowUp") {
+          if (commandIndex > 0) {
+            commandIndex--;
+            inputField.value = commandHistory[commandIndex];
+          }
+        } else if (event.key === "ArrowDown") {
+          if (commandIndex < commandHistory.length - 1) {
+            commandIndex++;
+            inputField.value = commandHistory[commandIndex];
+          } else {
+            inputField.value = "";
+          }
+        }
+      });
+
+      // Function to animate the timeline based on selected year
+      function animateTimeline(year) {
+        const currentYear = 2024;
+        const stone = infinityStones[year];
+
+        // elements to represent time travel on the timeline
+        const line = document.createElement("div");
+        line.classList.add("timeline-line");
+        timeline.appendChild(line);
+
+        timeline.innerHTML = "";
+
+        const startCircle = document.createElement("div");
+        startCircle.classList.add("timeline-circle");
+        timeline.appendChild(startCircle);
+
+        const endCircle = document.createElement("div");
+        endCircle.classList.add("timeline-circle");
+        timeline.appendChild(endCircle);
+
+        const content = document.createElement("div");
+        content.classList.add("timeline-content");
+        content.innerHTML = `<h3>Traveling to ${year}...</h3><p>Hold on!</p>`;
+        timeline.appendChild(content);
+
+        const numYears = Math.abs(year - currentYear);
+        const step = 100 / numYears;
+
+        let yearLabels = [];
+
+        for (let i = 0; i <= numYears; i++) {
+          const labelYear = currentYear + i * (year > currentYear ? 1 : -1);
+
+          const yearLabel = document.createElement("span");
+          yearLabel.classList.add("year-label");
+          yearLabel.textContent = labelYear;
+          yearLabels.push(yearLabel);
+          timeline.appendChild(yearLabel);
+
+          const labelPosition = i * step;
+          yearLabel.style.left = `calc(${labelPosition}% - 20px)`;
+        }
+
+        const travelDuration = Math.abs(year - currentYear) * 2;
+        timeline.style.transition = `transform ${travelDuration}s ease-in-out`;
+        timeline.style.transform = `translateX(${
+          (year - currentYear) * 100
+        }px)`;
+
+        // Fade out the year labels after the animation
+        yearLabels.forEach((label, index) => {
+          setTimeout(() => {
+            label.classList.add("fade-out");
+          }, index * (travelDuration / numYears) * 1000);
+        });
+
+        setTimeout(() => {
+          if (stone) {
+            displayOutput(
+              `Tony Stark> You found the ${stone} in the year ${year}!`
+            );
+          } else {
+            displayOutput(
+              `Tony Stark> There are no stones in the year ${year}. We're just going back in time!`
+            );
+          }
+
+          setTimeout(() => {
+            displayOutput("Tony Stark> We're here!");
+            redirectToPreviousPage();
+          }, 1500);
+        }, travelDuration * 1000);
+      }
+
+      function redirectToPreviousPage() {
+        setTimeout(() => {
+          window.history.back();
+        }, 2000);
+      }
+
+      function redirectToIndex() {
+        window.location.href = "index.html";
+      }
+
+      window.addEventListener("load", () => {
+        const audio = document.getElementById("background-music");
+        audio.muted = true;
+        audio.play().catch((error) => {
+          console.error("Audio playback failed:", error);
+        });
+
+        const unmuteButton = document.createElement("button");
+        unmuteButton.innerText = "Click to Play Music";
+        unmuteButton.style.position = "fixed";
+        unmuteButton.style.top = "20px";
+        unmuteButton.style.right = "20px";
+        document.body.appendChild(unmuteButton);
+
+        const stopButton = document.createElement("button");
+        stopButton.innerText = "Stop Music";
+        stopButton.style.position = "fixed";
+        stopButton.style.top = "60px";
+        stopButton.style.right = "20px";
+        stopButton.style.display = "none";
+        document.body.appendChild(stopButton);
+
+        unmuteButton.addEventListener("click", () => {
+          audio.muted = false;
+          audio.play().catch((error) => {
+            console.error("Audio playback failed:", error);
+          });
+          unmuteButton.style.display = "none";
+          stopButton.style.display = "block";
+        });
+
+        stopButton.addEventListener("click", () => {
+          audio.pause();
+          audio.currentTime = 0;
+          stopButton.style.display = "none";
+          unmuteButton.style.display = "block";
+        });
+      });
+    </script>
+    <footer
+      style="
+        color: #f4f4f4;
+        padding: 20px;
+        text-align: center;
+        margin-top: 200px;
+      "
+    >
+      <p>&copy; 2024 Iron Man Fan Club. All rights reserved.</p>
+      <p>
+        <a href="#" style="color: #00e5ff; text-decoration: none"
+          >Privacy Policy</a
+        >
+        |
+        <a href="#" style="color: #00e5ff; text-decoration: none"
+          >Terms of Service</a
+        >
+      </p>
+    </footer>
+  </body>
+</html>
